@@ -13,9 +13,9 @@ setup(
     license = "BSD",
     keywords = "dataframe csv json iterable stream-oriented",
     url = "http://packages.python.org/ioany",
-    packages=['ioany', 'ioany.util', 'tests'],
+    packages= ['ioany', 'ioany.util', 'tests'],
     long_description=read('README.rst'),
-    classifiers=[
+    classifiers= [
         "Development Status :: 2 - Pre-Alpha",
         "Topic :: Utilities",
         "License :: OSI Approved :: BSD License",
