@@ -16,8 +16,8 @@ setup(
     packages= ['ioany', 'ioany.util', 'tests'],
     long_description=read('README.rst'),
     classifiers= [
-        "Development Status :: 2 - Pre-Alpha",
         "Topic :: Utilities",
+        "Development Status :: 2 - Pre-Alpha",
         "License :: OSI Approved :: BSD License",
     ],
 )
