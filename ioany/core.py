@@ -86,9 +86,10 @@ class DataFrame(metaclass=abc.ABCMeta):
             for values in self.rowiter():
                 yield list(apply_types(self._types,values))
 
-    def recs(self,ordered=False):
+    def recs(self,ordered=True):
         """Yields a sequence of dicts based on the current input stream.
-           If :ordered is selected, then these will be OrderedDict structs."""
+           By default these will be OrderedDict structs.  However, if :ordered
+           is set to False, they will be vanilla dicts."""
         if ordered:
             for values in self.rows():
                 yield collections.OrderedDict(lzip(self._header,values))
@@ -223,9 +224,19 @@ def read_recs(*args,**kwargs):
     df = read_csv(*args,**kwargs)
     yield from df.recs()
 
+def peekaboo(stream):
+    r = next(stream)
+    header = list(r.keys())
+    def newstream():
+        yield r
+        yield from stream
+    _stream = newstream()
+    return header, _stream
+
 def save_recs(path,stream,encoding='utf-8',header=None,csvargs=None):
     if header is None:
-        raise ValueError("must have an explicit header")
+        header, stream = peekaboo(stream)
+        # raise ValueError("must have an explicit header")
     rowiter = ([r[k] for k in header] for r in stream)
     return save_csv(path,rowiter,encoding,header,csvargs)
 
