@@ -2,27 +2,11 @@ A simple utility class providing simple data slurping methods for CSV, JSON, and
 
 Becomes sometimes Pandas is just too darn big (and slow to import) for what you need to do.
 
+In order to use this software, you need to read (and agree to) the terms of the *License* section below.
+
 ### Status
 
 Pre-alpha.  Has been exercised extensively on my end, but (to my knowledge) not by anyone else yet.
-
-#### License 
-
-```
-Copyright 2017-2018 wstlabs (https://github.com/wstlabs) 
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this software except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
 
 ### Synopsis 
 
@@ -52,6 +36,22 @@ No unit tests.  Currently QA'd through extensive personal use only.
 * And on vanilla input files with vanilla structure (with regard to EOLN/EOF/BOM etc). 
 * Do you know what this means?
 
+### License 
+```
+Copyright 2017-2018 wstlabs (https://github.com/wstlabs) 
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this software except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
 
 
 
