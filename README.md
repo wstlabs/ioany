@@ -2,7 +2,11 @@ A simple utility class providing simple data slurping methods for CSV, JSON, and
 
 Becomes sometimes Pandas is just too darn big (and slow to import) for what you need to do.
 
-In order to use this software, you need to read (and agree to) the terms of the *License* section below.
+### License
+
+Copyright 2017-2018 by the author (wstlabs).
+
+Please see the file `LICENSE.txt` in this repository for licensing details.
 
 ### Status
 
@@ -37,7 +41,6 @@ No unit tests.  Currently QA'd through extensive personal use only.
 * And on vanilla input files with vanilla structure (with regard to EOLN/EOF/BOM etc)
 * Do you know what this means?
 
-### License 
 ```
 Copyright 2017-2018 wstlabs (https://github.com/wstlabs) 
 
