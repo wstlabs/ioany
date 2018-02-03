@@ -32,6 +32,7 @@ and so forth.
 No unit tests.  Currently QA'd through extensive personal use only.
 
 ### Bugs & Caveats
+* Python 3 only 
 * Currently only tested in Unix-like envronments
 * And on vanilla input files with vanilla structure (with regard to EOLN/EOF/BOM etc). 
 * Do you know what this means?
