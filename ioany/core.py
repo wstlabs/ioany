@@ -225,6 +225,15 @@ def read_recs(*args,**kwargs):
     yield from df.recs()
 
 def peekaboo(stream):
+    if isinstance(stream,list):
+        if len(stream) < 1:
+            raise ValueError("can't look ahead in empty list struct")
+        _stream = (_ for _ in stream)
+        return peekaboo_iterator(_stream)
+    else:
+        return peekaboo_iterator(stream)
+
+def peekaboo_iterator(stream):
     r = next(stream)
     header = list(r.keys())
     def newstream():
