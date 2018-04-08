@@ -270,9 +270,12 @@ def slurp_text(*args,**kwargs):
     return "\n".join(lines)
 
 def save_lines(path,lines,encoding='utf-8'):
+    n = 0
     with open(path,"wt",encoding=encoding) as f:
         for x in lines:
             f.write(str(x) + "\n")
+            n += 1
+    return n
 
 def save_text(path,text,encoding='utf-8'):
     with open(path,"wt",encoding=encoding) as f:
