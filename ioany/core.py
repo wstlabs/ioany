@@ -3,8 +3,8 @@ import csv
 import collections
 from copy import deepcopy
 import simplejson as json
-from ioany.util.itertools import lzip
-# from .util.itertools import lzip
+from .util.itertools import lzip
+from . import fixed
 
 class DataFrame(metaclass=abc.ABCMeta):
 
@@ -190,6 +190,15 @@ def apply_types(types,values):
         else:
             yield t(v)
 
+def read_fixed(path,encoding='utf-8',spec=None):
+    if spec is None:
+        raise ValueError("need a spec")
+    f = open(path,"rt",encoding=encoding)
+    reader = fixed.reader(f,spec)
+    header,types = fixed.divine(spec)
+    print(f'HEADER = {header}')
+    return DataFrameIterative(reader,header=header,types=types)
+
 
 def read_csv(path,encoding='utf-8',header=None,types=None,csvargs=None):
     if csvargs is None:
@@ -220,8 +229,20 @@ def save_json(path,obj,sort_keys=True,indent=4):
     with open(path,"wt",encoding="utf-8") as f:
         f.write(json.dumps(obj,sort_keys=sort_keys,indent=indent))
 
-def read_recs(*args,**kwargs):
-    df = read_csv(*args,**kwargs)
+def read_recs(path,**kwargs):
+    lowpath = path.lower()
+    if lowpath.endswith('.csv'):
+        return read_recs_csv(path,**kwargs)
+    if lowpath.endswith('.txt'):
+        return read_recs_fixed(path,**kwargs)
+    raise ValueError("unknown file extension")
+
+def read_recs_csv(path,**kwargs):
+    df = read_csv(path,**kwargs)
+    yield from df.recs()
+
+def read_recs_fixed(path,**kwargs):
+    df = read_fixed(path,**kwargs)
     yield from df.recs()
 
 def peekaboo(stream):
