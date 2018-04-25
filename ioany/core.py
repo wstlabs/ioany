@@ -178,6 +178,29 @@ class DataFrameIterative(DataFrame):
             raise ValueError("invalid label")
         yield from (r[j] for r in self.rows())
 
+BOOLISH = {}
+BOOLISH[True] = set(['true','t','yes','y','1'])
+BOOLISH[False] = set(['false','f','no','n','0'])
+def boolify(s):
+    if type(s) is not str:
+        return s
+    ss = s.lower()
+    if ss in BOOLISH[True]:
+        return True
+    if ss in BOOLISH[False]:
+        return False
+    return s
+
+def apply_type(t,v):
+    # if we're already of the desired type - pass the value on through
+    if type(v) is t:
+        return v
+    # otherwise there's one case we need to provide special treatment for:
+    # boolean casts of string values
+    if type(v) is str and t is bool:
+        return boolify(v)
+    # otherwise, try our look in casting to the desired type
+    return t(v)
 
 def apply_types(types,values):
     if types is None:
@@ -185,10 +208,11 @@ def apply_types(types,values):
     if len(types) != len(values):
         raise ValueError("invalid usage - len(values) != len(types)")
     for t,v in zip(types,values):
-        if type(v) is t:
-            yield v
-        else:
-            yield t(v)
+        yield apply_type(t,v)
+        # if type(v) is t:
+        #    yield v
+        # else:
+        #    yield t(v)
 
 def read_fixed(path,encoding='utf-8',spec=None):
     if spec is None:
