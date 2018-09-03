@@ -160,10 +160,10 @@ class DataFrameStatic(DataFrame):
         return [r[j] for r in self.rows()]
 
     def pick(self,k,n=None):
-        assert isinstance(k,int)
-        assert k >= 0
         if n is None:
             n = len(self)
+        assert isinstance(k,int)
+        assert k >= 0
         assert isinstance(n,int)
         assert n > 0
         assert n <= len(self)
