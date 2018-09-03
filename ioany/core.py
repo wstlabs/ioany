@@ -159,8 +159,16 @@ class DataFrameStatic(DataFrame):
             raise ValueError("invalid label")
         return [r[j] for r in self.rows()]
 
-    def pick(self,k,n):
-        pass
+    def pick(self,k,n=None):
+        assert isinstance(k,int)
+        assert k >= 0
+        if n is None:
+            n = len(self)
+        assert isinstance(n,int)
+        assert n > 0
+        assert n <= len(self)
+        assert k <= n
+        raise NotImplementedError("not yet implemented")
 
 
 class DataFrameIterative(DataFrame):
@@ -190,6 +198,12 @@ class DataFrameIterative(DataFrame):
         yield from (r[j] for r in self.rows())
 
     def pick(self,k,n):
+        assert isinstance(k,int)
+        assert k >= 0
+        assert isinstance(n,int)
+        assert n > 0
+        assert n <= len(self)
+        assert k <= n
         raise NotImplementedError("not yet implemented")
 
 
