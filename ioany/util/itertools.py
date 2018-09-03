@@ -2,7 +2,7 @@
 def lzip(*args):
     """A variant of the zip builtin that acts as a left-join on the two input sequences.
     That is, unlike zip which only emits up to the minimum capacity of the two respective
-    iterators, this version always emits up to the capacity of the first iterator, slotting 
+    iterators, this version always emits up to the capacity of the first iterator, slotting
     in None values when the second iterator is exhausted.
 
     Note that unlike the zip builtin which can take an open-ended number of arguments,
@@ -19,5 +19,4 @@ def lzip(*args):
             yield x,None
     for x in xx:
         yield x,None
-
 
