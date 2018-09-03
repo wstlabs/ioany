@@ -100,6 +100,10 @@ class DataFrame(metaclass=abc.ABCMeta):
     def column(self):
         pass
 
+    @abc.abstractmethod
+    def pick(self,k,n):
+        raise NotImplementedError("not yet implemented")
+
     def write_csv(self,f,csvargs=None):
         if csvargs is None:
             csvargs = {}
@@ -155,6 +159,9 @@ class DataFrameStatic(DataFrame):
             raise ValueError("invalid label")
         return [r[j] for r in self.rows()]
 
+    def pick(self,k,n):
+        pass
+
 
 class DataFrameIterative(DataFrame):
 
@@ -181,6 +188,10 @@ class DataFrameIterative(DataFrame):
         if j is None:
             raise ValueError("invalid label")
         yield from (r[j] for r in self.rows())
+
+    def pick(self,k,n):
+        raise NotImplementedError("not yet implemented")
+
 
 BOOLISH = {}
 BOOLISH[True] = set(['true','t','yes','y','1'])
