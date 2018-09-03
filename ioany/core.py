@@ -46,7 +46,6 @@ class DataFrame(metaclass=abc.ABCMeta):
         return (self.width,self.depth)
 
     def _build_index(self):
-        # print("header = %s,%s" % (type(self._header),self._header))
         self._index = {}
         for i,label in enumerate(self.header):
             if label in self._index:
@@ -104,6 +103,11 @@ class DataFrame(metaclass=abc.ABCMeta):
     def write_csv(self,f,csvargs=None):
         if csvargs is None:
             csvargs = {}
+        # apply some reasonably sane defaults.
+        if 'dialect' not in csvargs:
+            csvargs['dialect'] = 'unix'
+        if 'quoting' not in csvargs:
+            csvargs['quoting'] = csv.QUOTE_MINIMAL
         writer = csv.writer(f,**csvargs)
         count = 0
         if self.header:
@@ -209,10 +213,6 @@ def apply_types(types,values):
         raise ValueError("invalid usage - len(values) != len(types)")
     for t,v in zip(types,values):
         yield apply_type(t,v)
-        # if type(v) is t:
-        #    yield v
-        # else:
-        #    yield t(v)
 
 def read_fixed(path,encoding='utf-8',spec=None):
     if spec is None:
@@ -246,8 +246,6 @@ def save_csv(path,stream,encoding='utf-8',header=None,csvargs=None):
 
 def load_json(path,encoding='utf-8',header=None,types=None):
     raise RuntimeError("not yet implemented")
-    # with open(path,"rt",encoding=encoding) as f:
-    # return DataFrameStatic(reader,header=header,types=types)
 
 def save_json(path,obj,sort_keys=True,indent=4):
     with open(path,"wt",encoding="utf-8") as f:
@@ -290,7 +288,6 @@ def peekaboo_iterator(stream):
 def save_recs(path,stream,encoding='utf-8',header=None,csvargs=None):
     if header is None:
         header, stream = peekaboo(stream)
-        # raise ValueError("must have an explicit header")
     rowiter = ([r[k] for k in header] for r in stream)
     return save_csv(path,rowiter,encoding,header,csvargs)
 
