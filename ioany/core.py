@@ -166,8 +166,8 @@ class DataFrameStatic(DataFrame):
         assert k >= 0
         assert isinstance(n,int)
         assert n > 0
-        assert n <= len(self)
         assert k <= n
+        assert n <= len(self)
         raise NotImplementedError("not yet implemented")
 
 
