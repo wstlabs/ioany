@@ -1,5 +1,6 @@
 import abc
 import csv
+import random
 import collections
 from copy import deepcopy
 import simplejson as json
@@ -89,12 +90,8 @@ class DataFrame(metaclass=abc.ABCMeta):
         """Yields a sequence of dicts based on the current input stream.
            By default these will be OrderedDict structs.  However, if :ordered
            is set to False, they will be vanilla dicts."""
-        if ordered:
-            for values in self.rows():
-                yield collections.OrderedDict(lzip(self._header,values))
-        else:
-            for values in self.rows():
-                yield dict(lzip(self._header,values))
+        for values in self.rows():
+            yield makerec(self._header,values,ordered)
 
     @abc.abstractmethod
     def column(self):
@@ -159,16 +156,25 @@ class DataFrameStatic(DataFrame):
             raise ValueError("invalid label")
         return [r[j] for r in self.rows()]
 
+    def row(self,i):
+        assert isinstance(i,int)
+        assert i >= 0
+        assert i < len(self)
+        return self._rowset[i]
+
+    def rec(self,i):
+        row = self.row(i)
+        return makerec(self._header,row)
+
     def pick(self,k,n=None):
         if n is None:
             n = len(self)
-        assert isinstance(k,int)
-        assert k >= 0
-        assert isinstance(n,int)
-        assert n > 0
-        assert k <= n
+        _assert_args_pick(k,n)
         assert n <= len(self)
-        raise NotImplementedError("not yet implemented")
+        ii = list(range(n))
+        random.shuffle(ii)
+        for i in ii[:k]:
+            yield self.rec(i)
 
 
 class DataFrameIterative(DataFrame):
@@ -198,12 +204,8 @@ class DataFrameIterative(DataFrame):
         yield from (r[j] for r in self.rows())
 
     def pick(self,k,n):
-        assert isinstance(k,int)
-        assert k >= 0
-        assert isinstance(n,int)
-        assert n > 0
-        assert k <= n
-        raise NotImplementedError("not yet implemented")
+        # _assert_args_pick(k,n)
+        raise NotImplementedError("not yet implemented in iterative frames")
 
 
 BOOLISH = {}
@@ -371,6 +373,22 @@ def slurp_recs(*args,**kwargs):
 
 
 #
+# miscellaneous
+#
+
+def makerec(keys,vals,ordered=True):
+    dtype = collections.OrderedDict if ordered else dict
+    return dtype(lzip(keys,vals))
+
+def _assert_args_pick(k,n):
+    assert isinstance(k,int)
+    assert k >= 0
+    assert isinstance(n,int)
+    assert n > 0
+    assert k <= n
+
+
+#
 # speculative
 #
 
@@ -398,5 +416,14 @@ class Series(collections.Iterator):
             yield from self.values
         else:
             yield from (self.dtype(x) for x in values)
+
+
+def __recs(self,ordered=True):
+    if ordered:
+        for values in self.rows():
+             yield collections.OrderedDict(lzip(self._header,values))
+    else:
+        for values in self.rows():
+            yield dict(lzip(self._header,values))
 
 
