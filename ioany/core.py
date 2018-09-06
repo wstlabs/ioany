@@ -220,7 +220,6 @@ def read_fixed(path,encoding='utf-8',spec=None):
     f = open(path,"rt",encoding=encoding)
     reader = fixed.reader(f,spec)
     header,types = fixed.divine(spec)
-    print(f'HEADER = {header}')
     return DataFrameIterative(reader,header=header,types=types)
 
 
@@ -283,12 +282,12 @@ def peekaboo_iterator(stream):
         yield r
         yield from stream
     _stream = newstream()
-    return header, _stream
+    return header,_stream
 
 def save_recs(path,stream,encoding='utf-8',header=None,csvargs=None):
     if header is None:
-        header, stream = peekaboo(stream)
-    rowiter = ([r[k] for k in header] for r in stream)
+        header,stream = peekaboo(stream)
+    rowiter = ([r.get(k) for k in header] for r in stream)
     return save_csv(path,rowiter,encoding,header,csvargs)
 
 
