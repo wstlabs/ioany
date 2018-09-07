@@ -100,7 +100,7 @@ class DataFrame(metaclass=abc.ABCMeta):
     def column(self):
         pass
 
-    def write_csv(self,f,csvargs=None):
+    def write_csv(self,f,csvargs=None,apply_json=False):
         if csvargs is None:
             csvargs = {}
         # apply some reasonably sane defaults.
@@ -113,13 +113,15 @@ class DataFrame(metaclass=abc.ABCMeta):
         if self.header:
             writer.writerow(self.header)
         for row in self.rows():
+            if apply_json:
+                row = jsonify(row)
             writer.writerow(row)
             count += 1
         return count
 
-    def save_csv(self,path,encoding='utf-8',csvargs=None):
+    def save_csv(self,path,encoding='utf-8',csvargs=None,apply_json=False):
         f = open(path,"wt",encoding=encoding)
-        return self.write_csv(f,csvargs)
+        return self.write_csv(f,csvargs,apply_json)
 
 
 class DataFrameStatic(DataFrame):
@@ -266,6 +268,22 @@ def read_recs_fixed(path,**kwargs):
     df = read_fixed(path,**kwargs)
     yield from df.recs()
 
+def read_rows(path,**kwargs):
+    lowpath = path.lower()
+    if lowpath.endswith('.csv'):
+        return read_rows_csv(path,**kwargs)
+    if lowpath.endswith('.txt'):
+        return read_rows_fixed(path,**kwargs)
+    raise ValueError("unknown file extension")
+
+def read_rows_csv(path,**kwargs):
+    df = read_csv(path,**kwargs)
+    yield from df.rows()
+
+def read_rows_fixed(path,**kwargs):
+    df = read_fixed(path,**kwargs)
+    yield from df.rows()
+
 def peekaboo(stream):
     if isinstance(stream,list):
         if len(stream) < 1:
@@ -344,6 +362,15 @@ def slurp_csv(*args,**kwargs):
 def slurp_recs(*args,**kwargs):
     return list(read_recs(*args,**kwargs))
 
+def _jsonify(x):
+    if type(x) in (list,dict):
+        return json.dumps(s)
+    else:
+        return x
+
+def jsonify(row):
+    assert isinstance(row,list)
+    return [_jsonify(_) for _ in row]
 
 #
 # speculative
