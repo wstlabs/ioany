@@ -100,7 +100,7 @@ class DataFrame(metaclass=abc.ABCMeta):
     def column(self):
         pass
 
-    def write_csv(self,f,csvargs=None,apply_json=False):
+    def write_csv(self,f,csvargs=None,autojson=False):
         if csvargs is None:
             csvargs = {}
         # apply some reasonably sane defaults.
@@ -113,15 +113,15 @@ class DataFrame(metaclass=abc.ABCMeta):
         if self.header:
             writer.writerow(self.header)
         for row in self.rows():
-            if apply_json:
+            if autojson:
                 row = jsonify(row)
             writer.writerow(row)
             count += 1
         return count
 
-    def save_csv(self,path,encoding='utf-8',csvargs=None,apply_json=False):
+    def save_csv(self,path,encoding='utf-8',csvargs=None,autojson=False):
         f = open(path,"wt",encoding=encoding)
-        return self.write_csv(f,csvargs,apply_json)
+        return self.write_csv(f,csvargs,autojson)
 
 
 class DataFrameStatic(DataFrame):
@@ -239,9 +239,9 @@ def load_csv(path,encoding='utf-8',header=None,types=None,csvargs=None):
     reader = csv.reader(f,**csvargs)
     return DataFrameStatic(reader,header=header,types=types)
 
-def save_csv(path,stream,encoding='utf-8',header=None,csvargs=None):
+def save_csv(path,stream,encoding='utf-8',header=None,csvargs=None,autojson=False):
     df = DataFrameIterative(stream,header=header)
-    return df.save_csv(path,csvargs)
+    return df.save_csv(path,encoding=encoding,csvargs=csvargs,autojson=autojson)
 
 
 
@@ -302,11 +302,11 @@ def peekaboo_iterator(stream):
     _stream = newstream()
     return header,_stream
 
-def save_recs(path,stream,encoding='utf-8',header=None,csvargs=None):
+def save_recs(path,stream,encoding='utf-8',header=None,csvargs=None,autojson=False):
     if header is None:
         header,stream = peekaboo(stream)
     rowiter = ([r.get(k) for k in header] for r in stream)
-    return save_csv(path,rowiter,encoding,header,csvargs)
+    return save_csv(path,rowiter,encoding,header,csvargs,autojson)
 
 
 #
@@ -364,7 +364,7 @@ def slurp_recs(*args,**kwargs):
 
 def _jsonify(x):
     if type(x) in (list,dict):
-        return json.dumps(s)
+        return json.dumps(x)
     else:
         return x
 
