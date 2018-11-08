@@ -3,6 +3,7 @@ import csv
 import collections
 from copy import deepcopy
 import simplejson as json
+import yaml
 from .util.itertools import lzip
 from . import fixed
 
@@ -350,6 +351,10 @@ def save_content(path,content,encoding='utf-8'):
 #
 # Plain-Python "slurpers" that return fully populated, native structs.
 #
+
+def slurp_yaml(path,encoding='utf-8'):
+    f = open(path,"rt",encoding=encoding)
+    return yaml.load(f)
 
 def slurp_json(path,encoding='utf-8'):
     f = open(path,"rt",encoding=encoding)
