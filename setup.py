@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = "ioany",
-    version = "0.0.9",
+    version = "0.0.10",
     author = "wstlabs",
     author_email = "wst@pobox.com",
     description = ("Painless slurping and conversion between CSV, JSON and row/record formats"),

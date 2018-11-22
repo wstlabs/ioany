@@ -244,10 +244,16 @@ def save_csv(path,stream,encoding='utf-8',header=None,csvargs=None,autojson=Fals
     df = DataFrameIterative(stream,header=header)
     return df.save_csv(path,encoding=encoding,csvargs=csvargs,autojson=autojson)
 
+def load_yaml(path,encoding='utf-8'):
+    f = open(path,"rt",encoding=encoding)
+    return yaml.load(f)
 
-
-def load_json(path,encoding='utf-8',header=None,types=None):
+def save_yaml(path,obj):
     raise RuntimeError("not yet implemented")
+
+def load_json(path,encoding='utf-8'):
+    f = open(path,"rt",encoding=encoding)
+    return json.load(f)
 
 def save_json(path,obj,sort_keys=True,indent=4):
     with open(path,"wt",encoding="utf-8") as f:
@@ -353,12 +359,10 @@ def save_content(path,content,encoding='utf-8'):
 #
 
 def slurp_yaml(path,encoding='utf-8'):
-    f = open(path,"rt",encoding=encoding)
-    return yaml.load(f)
+    raise RuntimeError("deprecated")
 
 def slurp_json(path,encoding='utf-8'):
-    f = open(path,"rt",encoding=encoding)
-    return json.load(f)
+    raise RuntimeError("deprecated")
 
 def slurp_csv(*args,**kwargs):
     df = load_csv(*args,**kwargs)
