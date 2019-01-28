@@ -185,6 +185,7 @@ class DataFrameIterative(DataFrame):
             raise ValueError("invalid label")
         yield from (r[j] for r in self.rows())
 
+
 BOOLISH = {}
 BOOLISH[True] = set(['true','t','yes','y','1'])
 BOOLISH[False] = set(['false','f','no','n','0'])
