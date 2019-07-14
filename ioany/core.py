@@ -83,8 +83,11 @@ class DataFrame(metaclass=abc.ABCMeta):
         if types is None:
             yield from self.rowiter()
         else:
-            for values in self.rowiter():
-                yield list(apply_types(self._types,values))
+            for i,values in enumerate(self.rowiter()):
+                try:
+                    yield list(apply_types(self._types,values))
+                except Exception as e:
+                    raise ValueError(f"apply_types failed at line {i}, reason: {e}")
 
     def recs(self,ordered=True):
         """Yields a sequence of dicts based on the current input stream.
@@ -207,7 +210,7 @@ def apply_type(t,v):
     # boolean casts of string values
     if type(v) is str and t is bool:
         return boolify(v)
-    # otherwise, try our look in casting to the desired type
+    # otherwise, try our luck in casting to the desired type
     return t(v)
 
 def apply_types(types,values):
